@@ -18,11 +18,9 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute.jsx";
 
 const App = () => {
   const [user] = useAuthState(auth);
-
-  const handleLoginRedirect = async () => {
-    return user ? "/KaizenClub/home" : "/KaizenClub/login"; // Redirect to appropriate route
-  };
-
+if(!user){
+  <Navigate to={"/KaizenClub/login"} />
+}
   return (
     <Router>
       <Routes>
@@ -32,8 +30,7 @@ const App = () => {
         <Route path="/KaizenClub/members" element={<Members />} />
         <Route path="/KaizenClub/projects" element={<Projects />} />
         <Route path="/KaizenClub/join-us" element={<JoinUs />} />
-        {/* Optional redirect route for login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/KaizenClub/home" replace />} />
       </Routes>
     </Router>
   );

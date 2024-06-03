@@ -6,6 +6,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Loader from "../../components/Loader/Loader";
 import { Navigate } from "react-router-dom";
 const Home = () => {
+  document.body.style.overflow = "none";
+
   const [user] = useAuthState(auth);
   if (!user) {
     <Navigate to={"/KaizenClub/login"} />;

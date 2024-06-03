@@ -7,36 +7,39 @@ import { auth } from "../../firebase/config";
 import Loader from "../../components/Loader/Loader";
 import Logo from "../../components/Logo/Logo";
 import Slide from "../../components/Slider/slider";
+import ErrorPop from "../../components/ErrorPop/ErrorPop";
 
 const SignIn = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
-  const [createUserWithEmailAndPassword, user, loading, error] =
+  const [createUserWithEmailAndPassword, user, loading] =
     useCreateUserWithEmailAndPassword(auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
     try {
       const res = await createUserWithEmailAndPassword(email, password);
 
-      if (res) {
+      if (!res) {
+        setError("Email already in use");
+        return;
+      } else {
         console.log("user Added");
         setUsername("");
         setEmail("");
         setPassword("");
         navigate("/KaizenClub/home");
       }
-    } catch (err) {
-      if (error) {
-        console.error(error);
-      }
-      alert("Registration failed. Please check your details.");
-    }
+    } catch (err) {}
   };
 
   return (
@@ -45,11 +48,9 @@ const SignIn = () => {
         <Loader />
       ) : (
         <Slide>
-          {/* <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 shadow-md rounded-md flex flex-col justify-center items-center"> */}
           <div className=" w-[27rem] max-md:w-[20rem] max-md:h-auto bg-gray-800 h-[34rem] p-8 space-y-6  shadow-md rounded-lg flex flex-col justify-center items-center">
-
             <Logo />
-
+            {error && <ErrorPop errmsg={error} />}
             <form onSubmit={handleSubmit}>
               <div className="form-outer flex flex-col gap-7">
                 <FormInput
